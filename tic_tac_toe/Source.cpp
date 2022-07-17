@@ -1,6 +1,14 @@
 #include <iostream>
 #include <vector>
+#include <random>
 
+template<typename T>
+T random(T range_from, T range_to) {
+	std::random_device rand_dev;
+	std::mt19937 generator(rand_dev());
+	std::uniform_int_distribution<T> distrib(range_from, range_to);
+	return distrib(generator);
+}
 
 class TicTacToe
 {
@@ -100,6 +108,27 @@ public:
 		}
 	}
 
+	void ComputerPositionInput()
+	{
+		const int range_from = 0;
+		const int range_to = 2;
+
+		int row = random(range_from, range_to);
+		int col = random(range_from, range_to);
+
+		if (board[row][col] == " ")
+		{
+			board[row][col] = computer_dice;
+			visited++;
+			std::cout << std::endl;
+			DrawBoard();
+		}
+		else
+		{
+			return ComputerPositionInput();
+		}
+	}
+
 	void ContinueGame()
 	{
 		char option;
@@ -115,16 +144,20 @@ public:
 	{
 		std::cout << "*** Welcome to TIC TAC TOE ***" << std::endl;
 		std::cout << std::endl;
+		PlayerName();
+		ChoosePlayerDice();
 		while (continue_game)
 		{
-			PlayerName();
-			ChoosePlayerDice();
 			DrawBoard();
 			PlayerPositionInput();
+			std::cout << std::endl;
+			ComputerPositionInput();
 			std::cout << std::endl;
 			ContinueGame();
 		}
 		std::cout << std::endl << "Goodbye, Hope you enjoyed the game!";
+
+
 	}
 
 private:
